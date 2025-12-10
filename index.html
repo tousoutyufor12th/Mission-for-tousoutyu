@@ -384,8 +384,6 @@
   let currentClass = null;
   let digits = []; // array of characters
   let counts = loadCounts();
-  // 各クラスが最後に成功した回答（重複加算防止用）
-let lastCorrect = JSON.parse(localStorage.getItem("escape_last_correct") || "{}");
 
   // initialize display
   updateCountsUI();
@@ -436,16 +434,8 @@ let lastCorrect = JSON.parse(localStorage.getItem("escape_last_correct") || "{}"
     const input = digits.join("");
     const isCorrect = ANSWERS.includes(input);
     if(isCorrect){
-      // ▼ 追加：同じコードでの重複加算を禁止
-if (lastCorrect[currentClass] === input) {
-  showModal("既に入力済み", `このコードは以前 ${currentClass}組 が成功しています。`, false);
-  return;
-}
       counts[currentClass] = (counts[currentClass]||0) + 1;
       saveCounts();
-      // ▼ 追加：最後に成功したコードを記録
-lastCorrect[currentClass] = input;
-localStorage.setItem("escape_last_correct", JSON.stringify(lastCorrect));
       updateCountsUI();
       showModal("回答成功！", `${currentClass}組の回答が成功しました。入力: ${input}`, true);
     }else{
@@ -536,8 +526,6 @@ document.getElementById("resetAll").addEventListener("click", () => {
   });
   saveCounts();
   updateCountsUI();
-  lastCorrect = {};
-  localStorage.removeItem("escape_last_correct");
   alert("全クラスの回答成功数を 0 にリセットしました。");
 });
 
@@ -573,3 +561,4 @@ document.getElementById("resetAll").addEventListener("click", () => {
 </script>
 </body>
 </html>
+
