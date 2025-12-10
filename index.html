@@ -251,6 +251,31 @@
     cursor:pointer;
   }
 
+  /* Reset button */
+.reset-btn {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background: #900;
+  color: #fff;
+  border: 2px solid #f00;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+.reset-btn:hover {
+  background: #b00;
+}
+
+/* Reset password popup */
+.reset-input {
+  width: 80%;
+  padding: 8px;
+  margin: 10px 0;
+  font-size: 18px;
+}
+
   /* small screens */
   @media (max-width:880px){
     .container{flex-direction:column; padding:18px;}
@@ -330,6 +355,9 @@
       </div>
     </aside>
   </div>
+
+  <!-- Reset Button -->
+<button id="resetBtn" class="reset-btn">リセット</button>
 
   <!-- modal -->
   <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-hidden="true">
@@ -436,6 +464,52 @@
     }
   });
 
+  <!-- Reset Password Popup -->
+<div id="resetPopup" class="popup hidden">
+  <div class="popup-content">
+    <p>パスワードを入力してください</p>
+    <input type="password" id="resetPassword" class="reset-input" placeholder="パスワード">
+    <button id="resetSubmit" class="popup-button">決定</button>
+    <button id="resetCancel" class="popup-button">閉じる</button>
+  </div>
+</div>
+
+// ==== Reset system ====
+const resetBtn = document.getElementById("resetBtn");
+const resetPopup = document.getElementById("resetPopup");
+const resetSubmit = document.getElementById("resetSubmit");
+const resetCancel = document.getElementById("resetCancel");
+const resetPassword = document.getElementById("resetPassword");
+
+resetBtn.addEventListener("click", () => {
+    resetPassword.value = "";
+    resetPopup.classList.remove("hidden");
+});
+
+// リセット決定
+resetSubmit.addEventListener("click", () => {
+    if (resetPassword.value === "sss12") {
+        // カウントをリセット
+        for (const cls of Object.keys(successCount)) {
+            successCount[cls] = 0;
+        }
+
+        // 表示を更新
+        updateSuccessDisplay();
+
+        alert("全クラスの回答成功数をリセットしました。");
+        resetPopup.classList.add("hidden");
+    } else {
+        alert("パスワードが違います。");
+    }
+});
+
+// リセットキャンセル
+resetCancel.addEventListener("click", () => {
+    resetPopup.classList.add("hidden");
+});
+
+ 
   // modal close -> go back to class selection
   modalCloseBtn.addEventListener("click", () => {
     hideModal();
