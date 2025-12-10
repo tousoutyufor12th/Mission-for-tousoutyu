@@ -3,618 +3,162 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>ミッション回答入力 — 逃走中用</title>
+<title>逃走中 通知システム</title>
+
 <style>
-  :root{
-    --bg:#0b0b0b;
-    --panel:#111;
-    --accent:#d32f2f;
-    --text:#fff;
-    --muted:#bfbfbf;
-    --glass: rgba(255,255,255,0.03);
-    --success:#4caf50;
-  }
-  html,body{height:100%;margin:0;font-family:Inter, "Helvetica Neue", Arial, sans-serif;background:
-    radial-gradient(circle at 10% 10%, rgba(211,47,47,0.08), transparent 10%),
-    linear-gradient(180deg,#040404 0%, #0d0d0d 100%);
-    color:var(--text);
-  }
-  .container{
-    display:flex;
-    gap:24px;
-    min-height:100vh;
-    padding:28px;
-    box-sizing:border-box;
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
+
+  body {
+    font-family: 'Orbitron', system-ui, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: #111;
+    color: white;
   }
 
-  /* Left main area */
-  .main{
-    flex:1 1 0;
-    background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
-    border-radius:12px;
-    padding:22px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.6);
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    position:relative;
-    min-width:300px;
+  #container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
   }
 
-  header{
-    width:100%;
-    text-align:center;
-    margin-bottom:10px;
-  }
-  h1{
-    margin:6px 0 2px 0;
-    font-size:20px;
-    letter-spacing:1px;
-    color:var(--text);
-  }
-  .subtitle{
-    color:var(--muted);
-    font-size:13px;
+  .class-card {
+    background: #222;
+    border-radius: 10px;
+    padding: 15px;
+    width: 140px;
+    text-align: center;
   }
 
-  /* Class selection area */
-  .class-select{
-    margin-top:22px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:12px;
-    width:100%;
-  }
-  .class-buttons{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    justify-content:center;
-  }
-  .btn{
-    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    border:1px solid rgba(255,255,255,0.06);
-    color:var(--text);
-    padding:12px 18px;
-    border-radius:10px;
-    cursor:pointer;
-    font-weight:700;
-    letter-spacing:0.8px;
-    min-width:64px;
-    text-align:center;
-    box-shadow: 0 6px 14px rgba(0,0,0,0.6);
-  }
-  .btn:active{transform:translateY(1px);}
-
-  /* Input display box */
-  .input-panel{
-    margin-top:18px;
-    width:100%;
-    max-width:420px;
-    background:var(--panel);
-    border-radius:12px;
-    padding:18px;
-    box-sizing:border-box;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:12px;
-  }
-  .selected-class{
-    font-size:14px;
-    color:var(--muted);
-  }
-  .digit-display{
-    display:flex;
-    gap:8px;
-    justify-content:center;
-    align-items:center;
-    font-family:monospace;
-  }
-  .digit-slot{
-    width:44px;
-    height:56px;
-    border-radius:8px;
-    background:var(--glass);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:22px;
-    color:var(--text);
-    box-shadow: inset 0 -6px 14px rgba(0,0,0,0.5);
-  }
-  .digit-slot.empty{color:rgba(255,255,255,0.2);}
-
-  /* Keypad */
-  .keypad-wrap{
-    margin-top:16px;
-    width:100%;
-    display:flex;
-    justify-content:center;
-  }
-  .keypad{
-    width:320px;
-    max-width:95%;
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:10px;
-  }
-  .key{
-    height:68px;
-    border-radius:12px;
-    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:22px;
-    font-weight:700;
-    cursor:pointer;
-    border:1px solid rgba(255,255,255,0.06);
+  .count {
+    font-size: 32px;
+    margin: 10px 0;
   }
 
-  .key.small{height:56px;}
-  .special{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:8px;
-    color:var(--muted);
+  button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 6px;
+    background: #08f;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
   }
 
-  .controls{
-    margin-top:16px;
-    width:100%;
-    display:flex;
-    justify-content:center;
-    gap:12px;
-    flex-wrap:wrap;
-  }
-  .confirm{
-    background:linear-gradient(180deg,var(--accent), #a62828);
-    color:#fff;
-    padding:12px 22px;
-    border-radius:12px;
-    font-weight:800;
-    min-width:160px;
-    text-align:center;
-    cursor:pointer;
-    border:0;
-  }
-  .cancel{
-    background:transparent;
-    color:var(--muted);
-    padding:10px 16px;
-    border-radius:10px;
-    border:1px solid rgba(255,255,255,0.04);
-    cursor:pointer;
+  button:hover {
+    background: #0af;
   }
 
-  /* Right panel: current success counts */
-  .side{
-    width:220px;
-    min-width:180px;
-    background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
-    border-radius:12px;
-    padding:16px;
-    box-sizing:border-box;
-    align-self:flex-start;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.6);
-  }
-  .side h2{margin:0 0 6px 0;font-size:16px;color:var(--text);}
-  .counts{
-    margin-top:8px;
-    display:flex;
-    flex-direction:column;
-    gap:8px;
-  }
-  .count-row{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    background:rgba(255,255,255,0.02);
-    padding:8px 10px;
-    border-radius:8px;
-    font-weight:700;
-  }
-  .count-label{color:var(--muted);font-weight:700;}
-  .count-value{font-size:18px;color:var(--text);min-width:36px;text-align:right;}
-
-  /* Modal */
-  .modal-backdrop{
-    position:fixed;inset:0;display:none;justify-content:center;align-items:center;
-    background:linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8));
-    z-index:60;
-  }
-  .modal{
-    background:linear-gradient(180deg,#111,#0e0e0e);
-    border-radius:12px;
-    padding:22px;
-    max-width:420px;
-    width:90%;
-    text-align:center;
-    color:var(--text);
-    box-shadow: 0 12px 40px rgba(0,0,0,0.7);
-  }
-  .modal .result{
-    font-size:20px;
-    font-weight:800;
-    margin-bottom:10px;
-  }
-  .close-btn{
-    margin-top:12px;
-    padding:10px 14px;
-    border-radius:10px;
-    background:transparent;
-    border:1px solid rgba(255,255,255,0.06);
-    color:var(--muted);
-    cursor:pointer;
+  /* ▼▼ 追加：左下のリセットボタン ▼▼ */
+  #resetButton {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    padding: 10px 20px;
+    background: #444;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
   }
 
-  /* Reset button */
-.reset-btn {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  background: #900;
-  color: #fff;
-  border: 2px solid #f00;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-size: 16px;
-  cursor: pointer;
-}
-.reset-btn:hover {
-  background: #b00;
-}
-
-/* Reset password popup */
-.reset-input {
-  width: 80%;
-  padding: 8px;
-  margin: 10px 0;
-  font-size: 18px;
-}
-
-  /* small screens */
-  @media (max-width:880px){
-    .container{flex-direction:column; padding:18px;}
-    .side{width:100%; order:2;}
-    .main{order:1;}
+  #resetButton:hover {
+    background: #666;
   }
+  /* ▲▲ 追加：左下のリセットボタン ▲▲ */
+
 </style>
 </head>
 <body>
-  <div class="container">
-    <main class="main" role="main" aria-labelledby="title">
-      <header>
-        <h1 id="title">ミッション回答入力</h1>
-        <div class="subtitle">発令されたミッションの答えを入力し照合してください</div>
-      </header>
 
-      <section class="class-select" id="classSelectSection" aria-live="polite">
-        <div style="font-weight:700;color:var(--muted);">クラスを選択</div>
-        <div class="class-buttons" id="classButtons">
-          <button class="btn" data-class="A">A組</button>
-          <button class="btn" data-class="B">B組</button>
-          <button class="btn" data-class="C">C組</button>
-          <button class="btn" data-class="D">D組</button>
-        </div>
-      </section>
+<h1>回答成功数</h1>
 
-      <div class="input-panel" id="inputPanel" aria-hidden="true" style="display:none;">
-        <div class="selected-class" id="selectedClassText">選択中：—</div>
-        <div class="digit-display" id="digitDisplay" aria-label="入力した数字">
-          <div class="digit-slot empty">-</div>
-          <div class="digit-slot empty">-</div>
-          <div class="digit-slot empty">-</div>
-          <div class="digit-slot empty">-</div>
-          <div class="digit-slot empty">-</div>
-        </div>
-
-        <div class="keypad-wrap">
-          <div class="keypad" id="keypad">
-            <!-- 1..9 -->
-            <button class="key" data-key="1">1</button>
-            <button class="key" data-key="2">2</button>
-            <button class="key" data-key="3">3</button>
-
-            <button class="key" data-key="4">4</button>
-            <button class="key" data-key="5">5</button>
-            <button class="key" data-key="6">6</button>
-
-            <button class="key" data-key="7">7</button>
-            <button class="key" data-key="8">8</button>
-            <button class="key" data-key="9">9</button>
-
-            <!-- blank, 0, del -->
-            <div></div>
-            <button class="key" data-key="0">0</button>
-            <button class="key" data-key="del">⌫</button>
-          </div>
-        </div>
-
-        <div class="controls">
-          <button class="confirm" id="confirmBtn">決定</button>
-          <button class="cancel" id="cancelBtn">キャンセル</button>
-        </div>
-        <div style="margin-top:10px;color:var(--muted);font-size:13px;">入力は5桁です（例: 00001）。答えは15種類に固定されています。</div>
-      </div>
-    </main>
-
-    <aside class="side" aria-labelledby="countsTitle">
-      <h2 id="countsTitle">現在の回答成功数</h2>
-      <div class="counts" id="countsList">
-        <div class="count-row"><div class="count-label">A組</div><div class="count-value" id="countA">0</div></div>
-        <div class="count-row"><div class="count-label">B組</div><div class="count-value" id="countB">0</div></div>
-        <div class="count-row"><div class="count-label">C組</div><div class="count-value" id="countC">0</div></div>
-        <div class="count-row"><div class="count-label">D組</div><div class="count-value" id="countD">0</div></div>
-      </div>
-      <div style="margin-top:12px;color:var(--muted);font-size:13px;">
-        成功数が <strong style="color:var(--accent)">5以上</strong> の場合は赤字で表示されます。
-      </div>
-    </aside>
-  </div>
-
-  <!-- Reset Button -->
-<button id="resetBtn" class="reset-btn">リセット</button>
-
-  <!-- modal -->
-  <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-hidden="true">
-    <div class="modal" id="resultModal">
-      <div class="result" id="resultText">結果</div>
-      <div id="resultDetail" style="color:var(--muted);font-size:14px;"></div>
-      <button class="close-btn" id="modalCloseBtn">閉じる</button>
-    </div>
-  </div>
-
-<script>
-(function(){
-  // Predefined 15 answers as strings of length 5.
-  const ANSWERS = [
-    "00001","00002","00003","00004","00005",
-    "00006","00007","00008","00009","00010",
-    "00011","00012","00013","00014","00015"
-  ];
-
-  // Class keys and initial counts (persisted to localStorage)
-  const CLASSES = ["A","B","C","D"];
-  const STORAGE_KEY = "escape_counts_v1";
-
-  // DOM refs
-  const classButtons = document.getElementById("classButtons");
-  const inputPanel = document.getElementById("inputPanel");
-  const classSelectSection = document.getElementById("classSelectSection");
-  const selectedClassText = document.getElementById("selectedClassText");
-  const digitDisplay = document.getElementById("digitDisplay");
-  const keypad = document.getElementById("keypad");
-  const confirmBtn = document.getElementById("confirmBtn");
-  const cancelBtn = document.getElementById("cancelBtn");
-  const modalBackdrop = document.getElementById("modalBackdrop");
-  const modalCloseBtn = document.getElementById("modalCloseBtn");
-  const resultText = document.getElementById("resultText");
-  const resultDetail = document.getElementById("resultDetail");
-  const countsEls = {
-    A: document.getElementById("countA"),
-    B: document.getElementById("countB"),
-    C: document.getElementById("countC"),
-    D: document.getElementById("countD"),
-  };
-
-  // state
-  let currentClass = null;
-  let digits = []; // array of characters
-  let counts = loadCounts();
-
-  // initialize display
-  updateCountsUI();
-
-  // class selection handlers
-  classButtons.addEventListener("click", (e) => {
-    const btn = e.target.closest("button[data-class]");
-    if(!btn) return;
-    const cls = btn.getAttribute("data-class");
-    openForClass(cls);
-  });
-
-  function openForClass(cls){
-    currentClass = cls;
-    digits = [];
-    updateDigitDisplay();
-    selectedClassText.textContent = "選択中：" + cls + "組";
-    // show input panel, hide class selection
-    classSelectSection.style.display = "none";
-    inputPanel.style.display = "block";
-    inputPanel.setAttribute("aria-hidden","false");
-  }
-
-  // keypad handlers
-  keypad.addEventListener("click", (e) => {
-    const btn = e.target.closest("[data-key]");
-    if(!btn) return;
-    const key = btn.getAttribute("data-key");
-    if(key === "del"){
-      if(digits.length>0) digits.pop();
-    }else{
-      if(digits.length < 5) digits.push(key);
-    }
-    updateDigitDisplay();
-  });
-
-  // cancel -> back to class select
-  cancelBtn.addEventListener("click", () => {
-    backToClassSelect();
-  });
-
-  // confirm
-  confirmBtn.addEventListener("click", () => {
-    if(digits.length !== 5){
-      showModal("不正な入力", "入力は必ず5桁にしてください。", false);
-      return;
-    }
-    const input = digits.join("");
-    const isCorrect = ANSWERS.includes(input);
-    if(isCorrect){
-      counts[currentClass] = (counts[currentClass]||0) + 1;
-      saveCounts();
-      updateCountsUI();
-      showModal("回答成功！", `${currentClass}組の回答が成功しました。入力: ${input}`, true);
-    }else{
-      showModal("回答失敗", `不正解です。入力: ${input}`, false);
-    }
-  });
-
-  <!-- Reset Password Popup -->
-<div id="resetPopup" class="popup hidden">
-  <div class="popup-content">
-    <p>パスワードを入力してください</p>
-    <input type="password" id="resetPassword" class="reset-input" placeholder="パスワード">
-    <button id="resetSubmit" class="popup-button">決定</button>
-    <button id="resetCancel" class="popup-button">閉じる</button>
-  </div>
+<div id="container">
+  <!-- クラス一覧が入る -->
 </div>
 
-// ==== Reset system ====
-const resetBtn = document.getElementById("resetBtn");
-const resetPopup = document.getElementById("resetPopup");
-const resetSubmit = document.getElementById("resetSubmit");
-const resetCancel = document.getElementById("resetCancel");
-const resetPassword = document.getElementById("resetPassword");
+<!-- ▼▼ 追加：リセットボタン ▼▼ -->
+<button id="resetButton">リセット</button>
+<!-- ▲▲ 追加：リセットボタン ▲▲ -->
 
-resetBtn.addEventListener("click", () => {
-    resetPassword.value = "";
-    resetPopup.classList.remove("hidden");
-});
+<script>
 
-// リセット決定
-resetSubmit.addEventListener("click", () => {
-    if (resetPassword.value === "sss12") {
-        // カウントをリセット
-        for (const cls of Object.keys(successCount)) {
-            successCount[cls] = 0;
-        }
+// ▼▼ 元からあるクラス一覧 ▼▼
+const classes = [
+  "1-1","1-2","1-3","1-4","1-5","1-6",
+  "2-1","2-2","2-3","2-4","2-5","2-6",
+  "3-1","3-2","3-3","3-4","3-5","3-6",
+  "4-1","4-2","4-3","4-4","4-5","4-6"
+];
 
-        // 表示を更新
-        updateSuccessDisplay();
+function loadAllClasses() {
+  const container = document.getElementById("container");
+  container.innerHTML = "";
 
-        alert("全クラスの回答成功数をリセットしました。");
-        resetPopup.classList.add("hidden");
-    } else {
-        alert("パスワードが違います。");
-    }
-});
+  classes.forEach(cls => {
+    const count = Number(localStorage.getItem(cls) || 0);
 
-// リセットキャンセル
-resetCancel.addEventListener("click", () => {
-    resetPopup.classList.add("hidden");
-});
+    const card = document.createElement("div");
+    card.className = "class-card";
+    card.innerHTML = `
+      <h2>${cls}</h2>
+      <div class="count">${count}</div>
+      <button onclick="addPoint('${cls}')">＋</button>
+      <button onclick="removePoint('${cls}')">ー</button>
+    `;
 
- 
-  // modal close -> go back to class selection
-  modalCloseBtn.addEventListener("click", () => {
-    hideModal();
-    backToClassSelect();
+    container.appendChild(card);
+  });
+}
+
+function addPoint(cls) {
+  const now = Number(localStorage.getItem(cls) || 0);
+  localStorage.setItem(cls, now + 1);
+  loadAllClasses();
+}
+
+function removePoint(cls) {
+  const now = Number(localStorage.getItem(cls) || 0);
+  if (now > 0) {
+    localStorage.setItem(cls, now - 1);
+  }
+  loadAllClasses();
+}
+// ▲▲ 元のコードここまで ▲▲
+
+
+
+// ▼▼ ▼▼ 追加：リセット処理 ▼▼ ▼▼
+document.getElementById("resetButton").addEventListener("click", () => {
+  const pw = prompt("リセットにはパスワードが必要です。入力してください。");
+
+  if (pw !== "sss12") {
+    alert("パスワードが違います。");
+    return;
+  }
+
+  if (!confirm("本当にすべての成功数を0にしますか？")) return;
+
+  classes.forEach(cls => {
+    localStorage.setItem(cls, "0");
   });
 
-  function backToClassSelect(){
-    currentClass = null;
-    digits = [];
-    updateDigitDisplay();
-    selectedClassText.textContent = "選択中：—";
-    inputPanel.style.display = "none";
-    inputPanel.setAttribute("aria-hidden","true");
-    classSelectSection.style.display = "";
-  }
+  loadAllClasses();
 
-  function updateDigitDisplay(){
-    const slots = digitDisplay.querySelectorAll(".digit-slot");
-    for(let i=0;i<5;i++){
-      const slot = slots[i];
-      if(digits[i]){
-        slot.textContent = digits[i];
-        slot.classList.remove("empty");
-      }else{
-        slot.textContent = "-";
-        slot.classList.add("empty");
-      }
-    }
-  }
+  alert("全クラスをリセットしました！");
+});
+// ▲▲ ▲▲ 追加：リセット処理ここまで ▲▲ ▲▲
 
-  function showModal(title, detail, success){
-    resultText.textContent = title;
-    resultDetail.textContent = detail;
-    if(success){
-      resultText.style.color = "var(--success)";
-    }else{
-      resultText.style.color = "var(--accent)";
-    }
-    modalBackdrop.style.display = "flex";
-    modalBackdrop.setAttribute("aria-hidden","false");
-  }
 
-  function hideModal(){
-    modalBackdrop.style.display = "none";
-    modalBackdrop.setAttribute("aria-hidden","true");
-    resultText.style.color = "";
-  }
 
-  // counts persistence
-  function loadCounts(){
-    try{
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if(!raw) return {A:0,B:0,C:0,D:0};
-      const parsed = JSON.parse(raw);
-      // ensure keys
-      return Object.assign({A:0,B:0,C:0,D:0}, parsed);
-    }catch(e){
-      return {A:0,B:0,C:0,D:0};
-    }
-  }
-  function saveCounts(){
-    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(counts)); }catch(e){}
-  }
+function init() {
+  loadAllClasses();
+}
 
-  function updateCountsUI(){
-    CLASSES.forEach(c=>{
-      const val = counts[c] || 0;
-      countsEls[c].textContent = String(val);
-      if(val >= 5){
-        countsEls[c].style.color = "var(--accent)";
-      }else{
-        countsEls[c].style.color = "var(--text)";
-      }
-    });
-  }
+init();
 
-  // keyboard support: numeric keys and backspace/enter
-  window.addEventListener("keydown",(e)=>{
-    if(inputPanel.style.display === "none") return;
-    if(e.key >= "0" && e.key <= "9"){
-      if(digits.length < 5) digits.push(e.key);
-      updateDigitDisplay();
-      e.preventDefault();
-    }else if(e.key === "Backspace"){
-      if(digits.length>0) digits.pop();
-      updateDigitDisplay();
-      e.preventDefault();
-    }else if(e.key === "Enter"){
-      confirmBtn.click();
-      e.preventDefault();
-    }else if(e.key === "Escape"){
-      cancelBtn.click();
-    }
-  });
-
-  // initialization: show counts from storage
-  updateCountsUI();
-
-  // Accessibility: focus trapping for modal (simple)
-  modalBackdrop.addEventListener("keydown", function(e){
-    if(e.key === "Escape"){
-      modalCloseBtn.click();
-    }
-  });
-})();
 </script>
+
 </body>
 </html>
