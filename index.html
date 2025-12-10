@@ -536,6 +536,8 @@ document.getElementById("resetAll").addEventListener("click", () => {
   });
   saveCounts();
   updateCountsUI();
+  lastCorrect = {};
+  localStorage.removeItem("escape_last_correct");
   alert("全クラスの回答成功数を 0 にリセットしました。");
 });
 
