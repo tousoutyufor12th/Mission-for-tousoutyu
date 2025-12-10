@@ -275,7 +275,14 @@
           <button class="btn" data-class="C">C組</button>
           <button class="btn" data-class="D">D組</button>
         </div>
+        
       </section>
+
+      <!-- ▼ 全クラス回答成功数リセットボタン ▼ -->
+<button class="btn" id="resetAll" style="position:absolute; left:20px; bottom:20px;">
+  全リセット
+</button>
+<!-- ▲ 全クラス回答成功数リセットボタン ▲ -->
 
       <div class="input-panel" id="inputPanel" aria-hidden="true" style="display:none;">
         <div class="selected-class" id="selectedClassText">選択中：—</div>
@@ -511,6 +518,16 @@
       }
     });
   }
+
+  // ▼ 全クラス回答成功数リセット
+document.getElementById("resetAll").addEventListener("click", () => {
+  CLASSES.forEach(c => {
+    counts[c] = 0;
+  });
+  saveCounts();
+  updateCountsUI();
+  alert("全クラスの回答成功数を 0 にリセットしました。");
+});
 
   // keyboard support: numeric keys and backspace/enter
   window.addEventListener("keydown",(e)=>{
